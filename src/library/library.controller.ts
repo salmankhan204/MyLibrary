@@ -1,35 +1,37 @@
 import { Controller, Post, Body, Get, Param, Put } from '@nestjs/common';
 import { LibraryService } from './library.service';
+import { ApiTags, ApiOperation, ApiBody } from '@nestjs/swagger';
+import { CreateLibraryDto } from './library.dto';
 
+@ApiTags('Libraries')
 @Controller('libraries')
 export class LibraryController {
   constructor(private readonly libraryService: LibraryService) {}
 
-  // Create a new library
-  @Post('add')
-  async createLibrary(@Body() body: { name: string; location: string }) {
+  @Post()
+  @ApiOperation({ summary: 'Create a new library' })
+  @ApiBody({ type: CreateLibraryDto })
+  createLibrary(@Body() body: CreateLibraryDto) {
     return this.libraryService.createLibrary(body);
   }
 
-  // Get a library by ID with its books populated
   @Get(':id')
-  async getLibrary(@Param('id') id: string) {
+  @ApiOperation({ summary: 'Get a library with its books' })
+  getLibrary(@Param('id') id: string) {
     return this.libraryService.getLibraryWithBooks(id);
   }
 
-  // Get all libraries with their books populated
-  @Get()
-  async getAllLibraries() {
-    return this.libraryService.getAllLibraries();
-  }
-
-  // Add a book to a library's books array
   @Put(':libraryId/add-book/:bookId')
-  async addBookToLibrary(
+  @ApiOperation({ summary: 'Add a book to a library' })
+  addBookToLibrary(
     @Param('libraryId') libraryId: string,
     @Param('bookId') bookId: string,
   ) {
     return this.libraryService.addBookToLibrary(libraryId, bookId);
   }
-}
 
+  @Get()
+  async getAllLibraries() {
+    return this.libraryService.getAllLibraries();
+  }
+}
