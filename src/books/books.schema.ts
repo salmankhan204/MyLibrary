@@ -12,11 +12,11 @@ export class Book {
   @Prop()
   author: string;
 
-  @Prop({ type: MongooseSchema.Types.ObjectId, ref: 'Library', required: true })
-  libraryId: string;
+  // @Prop({ type: MongooseSchema.Types.ObjectId, ref: 'Library', required: true })
+  // libraryId: string;
 
-  @Prop({ type: MongooseSchema.Types.ObjectId, ref: 'Library' })
-  library?: any;
+  // @Prop({ type: MongooseSchema.Types.ObjectId, ref: 'Library' })
+  // library?: any;
 }
 
 export const BookSchema = SchemaFactory.createForClass(Book);

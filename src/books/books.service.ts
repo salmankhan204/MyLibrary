@@ -13,18 +13,20 @@ export class BooksService {
   ) {}
 
   async createBook(createBookDto: CreateBookDto) {
-    const { libraryId } = createBookDto;
-
-    const library = await this.libraryModel.findById(libraryId);
-    if (!library) {
-      throw new NotFoundException('Library with given ID not found');
-    }
-
     const newBook = new this.bookModel(createBookDto);
     return newBook.save();
   }
 
-  async findAllBooksWithLibrary() {
-    return this.bookModel.find().populate('library');
+  async findAllBooks() {
+    return this.bookModel.find();
+  }
+
+  async findAllBooksWithLibrary(libraryId: string) {
+    const library = await this.libraryModel.findById(libraryId);
+    if (!library) {
+      throw new NotFoundException('Library not found');
+    }
+
+    return this.bookModel.find({ libraryId }).populate('libraryId');
   }
 }

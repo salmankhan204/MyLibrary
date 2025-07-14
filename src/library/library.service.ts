@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { Library } from './library.schema';
@@ -11,8 +11,8 @@ const array = [
   {
     name: 'Community Library',
     location: 'Uptown',
-  }
-]
+  },
+];
 
 @Injectable()
 export class LibraryService {
@@ -29,8 +29,24 @@ export class LibraryService {
     return this.libraryModel.find().populate('books');
   }
 
-  async getLibraryWithBooks(id: string) {
+  async deleteLibrary(id: string) {
+    const library = await this.libraryModel.findByIdAndDelete(id);
+    if (!library) {
+      throw new NotFoundException('Library not found');
+    }
+    return library;
+  }
+
+  async getSingleLibrary(id: string) {
     return this.libraryModel.findById(id).populate('books');
+  }
+
+  async getBookInLibrary(id: string, bookId: string) {
+    const library = await this.libraryModel.findById(id).populate('books');
+    if (!library) {
+      throw new NotFoundException('Library not found');
+    }
+    return library.books.find((book) => book._id.toString() === bookId);
   }
 
   async addBookToLibrary(libraryId: string, bookId: string) {

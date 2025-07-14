@@ -11,7 +11,7 @@ export class CreateBookDto {
   @IsString()
   author: string;
 
-  @ApiProperty({ example: '64b75d76e7cc79c74a3e9f1d', description: 'MongoDB ObjectId of the library' })
-  @IsMongoId()
-  libraryId: string;
+  // @ApiProperty({ example: '64b75d76e7cc79c74a3e9f1d', description: 'MongoDB ObjectId of the library' })
+  // @IsMongoId()
+  // libraryId: string;
 }

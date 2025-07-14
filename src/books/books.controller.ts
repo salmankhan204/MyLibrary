@@ -1,4 +1,4 @@
-import { Controller, Post, Body, Get } from '@nestjs/common';
+import { Controller, Post, Body, Get, Param } from '@nestjs/common';
 
 import { ApiTags, ApiBody, ApiOperation } from '@nestjs/swagger';
 import { BooksService } from './books.service';
@@ -17,8 +17,13 @@ export class BooksController {
   }
 
   @Get()
-  @ApiOperation({ summary: 'Get all books with library info' })
+  @ApiOperation({ summary: 'Get all books' })
   getBooks() {
-    return this.bookService.findAllBooksWithLibrary();
+    return this.bookService.findAllBooks();
+  }
+  
+  @Get('library/:id')
+  getBooksByLibrary(@Param('id') libraryId: string) {
+    return this.bookService.findAllBooksWithLibrary(libraryId);
   }
 }
