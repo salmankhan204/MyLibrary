@@ -21,12 +21,20 @@ export class BooksService {
     return this.bookModel.find();
   }
 
-  async findAllBooksWithLibrary(libraryId: string) {
-    const library = await this.libraryModel.findById(libraryId);
-    if (!library) {
-      throw new NotFoundException('Library not found');
-    }
+async findAllBooksWithLibraryInfo(libraryId: string) {
+  const library = await this.libraryModel.findById(libraryId);
 
-    return this.bookModel.find({ libraryId }).populate('libraryId');
+  if (!library) {
+    throw new NotFoundException('Library not found');
   }
+
+  const books = await this.bookModel.find({ _id: { $in: library.books } });
+  return books.map((book) => ({
+    _id: book._id,
+    title: book.title,
+    author: book.author,
+  }));
+}
+
+
 }

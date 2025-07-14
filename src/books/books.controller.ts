@@ -21,9 +21,11 @@ export class BooksController {
   getBooks() {
     return this.bookService.findAllBooks();
   }
+
+
   
   @Get('library/:id')
   getBooksByLibrary(@Param('id') libraryId: string) {
-    return this.bookService.findAllBooksWithLibrary(libraryId);
+    return this.bookService.findAllBooksWithLibraryInfo(libraryId);
   }
 }
