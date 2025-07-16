@@ -1,5 +1,5 @@
 import { IsNotEmpty, IsString, IsMongoId } from 'class-validator';
-import { ApiProperty } from '@nestjs/swagger';
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
 export class CreateBookDto {
   @ApiProperty({ example: 'The Great Gatsby' })
@@ -10,8 +10,16 @@ export class CreateBookDto {
   @ApiProperty({ example: 'F. Scott Fitzgerald' })
   @IsString()
   author: string;
+}
 
-  // @ApiProperty({ example: '64b75d76e7cc79c74a3e9f1d', description: 'MongoDB ObjectId of the library' })
-  // @IsMongoId()
-  // libraryId: string;
+
+export class FindBooksQueryDto {
+  @ApiPropertyOptional({ description: 'Library ID to filter books', type: String })
+  libraryId?: string;
+
+  @ApiPropertyOptional({ description: 'Page number for pagination', type: Number, example: 1 })
+  page?: number;
+
+  @ApiPropertyOptional({ description: 'Number of items per page', type: Number, example: 5 })
+  limit?: number;
 }

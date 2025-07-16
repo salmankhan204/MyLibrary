@@ -1,8 +1,8 @@
-import { Controller, Post, Body, Get, Param } from '@nestjs/common';
+import { Controller, Post, Body, Get, Param, Query } from '@nestjs/common';
 
-import { ApiTags, ApiBody, ApiOperation } from '@nestjs/swagger';
+import { ApiTags, ApiBody, ApiOperation, ApiQuery } from '@nestjs/swagger';
 import { BooksService } from './books.service';
-import { CreateBookDto } from './books.dto';
+import { CreateBookDto, FindBooksQueryDto } from './books.dto';
 
 @ApiTags('Books')
 @Controller('books')
@@ -17,13 +17,12 @@ export class BooksController {
   }
 
   @Get()
-  @ApiOperation({ summary: 'Get all books' })
-  getBooks() {
-    return this.bookService.findAllBooks();
-  }
-  
-  @Get('library/:id')
-  getBooksByLibrary(@Param('id') libraryId: string) {
-    return this.bookService.findAllBooksWithLibrary(libraryId);
+  @ApiOperation({ summary: 'Get all books or filter by libraryId' })
+  getBooks(
+    @Query('page') page = 1,
+    @Query('limit') limit = 5,
+    @Query() query: FindBooksQueryDto,
+  ) {
+    return this.bookService.findAllBooks(query.libraryId, page, limit);
   }
 }

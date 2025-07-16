@@ -17,16 +17,72 @@ export class BooksService {
     return newBook.save();
   }
 
-  async findAllBooks() {
-    return this.bookModel.find();
-  }
+  //  async findAllBooks(libraryId?: string, page = 1, limit = 10) {
+  //   const skip = (page - 1) * limit;
 
-  async findAllBooksWithLibrary(libraryId: string) {
-    const library = await this.libraryModel.findById(libraryId);
-    if (!library) {
-      throw new NotFoundException('Library not found');
-    }
+  //   if (libraryId) {
+  //     const library = await this.libraryModel.findById(libraryId);
 
-    return this.bookModel.find({ libraryId }).populate('libraryId');
+  //     if (!library) {
+  //       throw new NotFoundException('Library not found');
+  //     }
+
+  //     const total = library.books.length;
+
+  //     const books = await this.bookModel
+  //       .find({ _id: { $in: library.books } })
+  //       .skip(skip)
+  //       .limit(limit);
+
+  //     return {
+  //       data: books.map((book) => ({
+  //         _id: book._id,
+  //         title: book.title,
+  //         author: book.author,
+  //         library: {
+  //           name: library.name,
+  //           location: library.location,
+  //         },
+  //       })),
+  //       total,
+  //       page,
+  //       limit,
+  //       lastPage: Math.ceil(total / limit),
+  //     };
+  //   }
+
+  //   const total = await this.bookModel.countDocuments();
+
+  //   const books = await this.bookModel.find().skip(skip).limit(limit);
+
+  //   return {
+  //     data: books.map((book) => ({
+  //       _id: book._id,
+  //       title: book.title,
+  //       author: book.author,
+  //     })),
+  //     total,
+  //     page,
+  //     limit,
+  //     lastPage: Math.ceil(total / limit),
+  //   };
+  // }
+  async findAllBooks(libraryId?: string, page = 1, limit = 5) {
+    const skip = (page - 1) * limit;
+
+    const books = await this.bookModel.find().skip(skip).limit(limit);
+    const total = await this.bookModel.countDocuments();
+
+    return {
+      data: books.map((book) => ({
+        _id: book._id,
+        title: book.title,
+        author: book.author,
+      })),
+      total,
+      page,
+      limit,
+      lastPage: Math.ceil(total / limit),
+    };
   }
 }
